@@ -2,11 +2,43 @@ import discord, time, random, asyncio
 from discord.ext import commands
 
 intents = discord.Intents.all()
+
+intents.message_content = True
+intents.members = True
+
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+python_logo = """
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢠⢠⢢⢢⢲⢱⢱⢱⢕⢵⢱⢕⢕⢖⢴⢰⡠⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢜⢜⢜⢜⢜⢼⢸⢜⡪⡣⡣⡳⡱⡣⣫⢺⡸⡱⣕⢵⡱⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡪⡪⡪⠊⠀⠀⠀⢣⢣⡣⡳⡹⣸⢱⢝⢜⢎⢮⡣⣳⢱⢵⡱⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢎⢎⢮⠀⠀⠀⠀⡸⡸⡸⡪⣣⢣⡳⡕⣝⢕⡇⣗⢵⡹⡜⡮⣪⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡕⡵⡱⡹⡰⡔⣕⢵⢹⢜⢕⡕⣇⢧⢫⡪⣣⢳⢕⢧⢳⡹⡪⡮⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠎⠎⠮⠪⠣⠣⠣⠇⠗⠕⠧⠳⡱⡕⡧⡫⣎⢧⢳⢝⢮⡪⣏⢞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⡀⡀⡄⡠⡀⡄⡠⣀⢄⢄⢄⢄⢄⢄⢄⢄⢄⢄⢄⢇⢯⡪⣳⢱⢳⡹⡪⣇⢗⡵⣫⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⡠⡪⡪⡪⡣⡣⣣⢳⢹⢸⡸⡜⡜⡎⡞⣜⢕⢇⢯⡪⣣⡳⡝⣎⢞⢼⡱⣳⢹⡺⣜⢵⢝⢮⠀⠀⠂⠁⡈⠠⠈⠠⠐⠀⠀⠀⠀
+⠀⢀⢎⢎⢎⢮⢪⢎⢮⢪⢪⡪⡎⣎⢮⢪⢳⢹⡸⡪⡳⡱⡝⡼⣸⢪⢎⡗⡧⡫⣎⢧⡳⡵⡝⡮⡳⠀⠀⠂⠁⡀⠐⠈⡀⠐⢈⠠⠀⠀
+⠀⡪⡪⡪⡪⣪⢪⡪⡪⡪⡣⣣⢣⢇⢗⢝⡜⣕⢵⢹⢪⡳⡹⡪⣎⢗⣕⢗⡝⡞⣎⢗⢵⢳⢝⢮⡫⠀⠀⠂⠁⡀⠌⢀⠐⠈⡀⠄⠠⠀
+⢨⢪⢪⡪⡣⡣⡣⡣⡫⣪⢣⡣⡳⡱⡝⣜⢎⢞⣜⢕⢧⢳⡹⡕⡧⡳⡕⣗⢝⢞⣎⢯⢳⢝⢵⢳⠍⠀⠠⠈⠠⢀⠐⠀⠄⢁⠠⠐⢀⠂
+⡢⡳⡱⡱⡱⡹⡸⡱⡹⡸⡜⣜⢵⢹⢜⢎⢮⣓⢎⢗⡝⡮⡺⣪⢳⡹⣚⣎⢏⡧⣳⡹⣪⡫⡳⠃⠀⢀⠐⠈⠠⠀⠂⡁⢈⠠⠀⠌⠀⠄
+⡣⡣⣣⢫⢪⢣⡫⣪⢣⡫⡪⣎⢞⡜⣎⠗⠕⠑⠙⠑⠑⠙⠊⠊⠓⠙⠊⠊⠓⠙⠘⠊⠁⠁⠀⢀⠠⠀⠂⡁⠄⢁⠂⠐⡀⢐⠈⠠⠁⠂
+⡝⣜⢜⡜⣕⢵⢱⢕⢵⢹⢜⢎⢮⠚⠀⠀⡀⠄⠠⠀⠠⠀⡀⠄⢀⠀⡀⠄⢀⠠⠀⠠⠀⢂⠈⡀⠄⡈⠄⡀⠂⠄⠂⡁⢐⠀⠌⠠⠁⡁
+⢪⢪⡪⣪⢪⢎⢞⡜⣎⢧⢳⡹⠈⠀⢀⠐⠀⡀⠂⢈⠠⠐⠀⠠⠀⠄⠠⠐⠀⠠⠈⠠⠈⠠⠀⠄⠂⠠⠐⠀⠌⡀⠡⠀⡂⠄⠡⠈⠄⠂
+⠨⡪⡪⡎⡞⣜⢕⢵⡱⡕⣇⠇⠀⠠⠀⠄⠁⡀⢈⠀⡀⠄⢈⠀⢂⠈⡀⠂⠁⠄⢁⠂⠁⠄⠡⠀⠅⠂⡁⠌⠠⠐⠈⠄⢐⠠⠁⠌⠠⠁
+⠀⢣⢫⡪⣺⢸⡱⣣⢳⡹⡸⡅⠀⠐⠀⠂⠁⡀⠄⠠⠀⡐⠀⡐⠀⠄⠐⢈⠠⠈⠠⢀⠡⠈⠠⠁⠄⡁⠄⠂⡁⠌⠠⠁⡂⠄⠡⢈⠐⠀
+⠀⠈⢪⢺⡸⡱⣕⢕⡇⡯⣚⠆⠀⢀⠁⠄⠁⡀⠄⠂⠐⢀⠐⢀⠈⠄⠁⠄⠐⢈⠀⡂⠠⠈⠄⡁⠂⠄⠂⡁⠄⠨⠀⠅⡐⢈⠐⠠⠀⠀
+⠀⠀⠀⠑⠵⡹⡜⣕⢝⢮⣪⡃⠀⢀⠐⢀⠁⠠⠀⠌⠐⢀⠐⡀⠂⡈⠐⢈⠐⡀⢂⠐⢈⠠⠁⡐⠈⠄⠡⠐⠈⠄⠅⢂⢐⠠⠈⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠠⠐⠀⠄⢁⠐⢀⠡⠀⢂⠀⡂⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢀⠁⡐⢀⠐⠠⠐⠈⠠⠐⠀⠌⡀⠂⡂⠨⠐⢈⠠⠁⠌⠄⠡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢈⠠⢀⠐⢀⠈⠄⠨⢀⠡⠠⠁⡂⠄⠡⠐⡀⠅⠐⠀⠡⠈⠄⠡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠐⢀⠐⠠⢈⠠⠁⠄⠂⠄⠡⠀⡂⢁⠂⠄⠀⠀⠀⠀⢁⠡⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠡⠀⠌⠐⡀⡐⢈⠠⠁⠌⠠⢁⠐⡀⢂⠂⡀⠀⠀⡀⠂⠄⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠌⡀⠂⠄⠂⠄⠡⢈⠐⡀⢂⠂⢂⠐⠠⢁⠡⠠⠁⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠈⠀⠅⠨⠀⠂⠂⠂⠨⠠⠈⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"""
 @bot.event
 async def on_ready():
     print("Bot iniciado!")
+    print("Intent members:", bot.intents.members)
 
 @bot.command()
 async def oi(ctx):
@@ -72,6 +104,48 @@ async def dance(ctx):
     await ctx.send(gif_url)
 
 @bot.command()
+async def rolar_dado(ctx):
+    async with ctx.channel.typing():
+        await asyncio.sleep(0.5)
+
+    await ctx.send('Rolando dado...')
+    await asyncio.sleep(0.7)
+
+    async with ctx.channel.typing():
+        await asyncio.sleep(2.5)
+
+    await ctx.send(f"O número sorteado foi o número {random.randint(1, 6)}\U0001F3B2")
+
+@bot.command()
+async def averiguar_resenha(ctx):
+    async with ctx.channel.typing():
+        await asyncio.sleep(0.7)
+
+    imagem = 'C:\\Users\\enzog\\Downloads\\resenha.png'
+    resenha_encontrada = 'C:\\Users\\enzog\\Downloads\\resenha_encontrada.png'
+
+    await ctx.send(file=discord.File(imagem))
+
+    chance = random.random()
+
+    await asyncio.sleep(10)
+    async with ctx.channel.typing():
+        await asyncio.sleep(1)
+    if chance < 0.90:
+        await ctx.send("Nenhuma resenha averiguada")
+    else:
+        await ctx.send("RESENHA ENCONTRADA\U0001F6A8\U0001F6A8\U0001F6A8\U0001F6A8\U0001F6A8\U0001F440\U0001F440\U0001F440\U0001F440")
+        await asyncio.sleep(1)
+        await ctx.send(file=discord.File(resenha_encontrada))
+
+@bot.command()
+async def python_ascii(ctx):
+    async with ctx.channel.typing():
+        await asyncio.sleep(5)
+
+    await ctx.send(python_logo)
+
+@bot.command()
 async def ajuda(ctx):
     async with ctx.channel.typing():
         await asyncio.sleep(4)
@@ -85,6 +159,9 @@ async def ajuda(ctx):
     !ping: Pong!\U0001F3D3
     !cara_ou_coroa: lanca uma moeda e diz se da cara ou coroa
     !kaboom: conta de 10 a 0 e faz kaboom
-    !dance: faz o PyBot dançar""")
+    !dance: faz o PyBot dançar
+    !rolar_dado: rola um dado comum
+    !averiguar_resenha: \U00000022averiguando possível resenha...\U00000022
+    !python_ascii: manda uma arte em ascii com a logo do python""")
 
-bot.run("SEU_TOKEN_LEGAL")
+bot.run("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
