@@ -40,12 +40,17 @@ async def on_ready():
     print("Bot iniciado!")
     print("Intent members:", bot.intents.members)
 
+
 @bot.command()
 async def oi(ctx):
     async with ctx.channel.typing():
         await asyncio.sleep(0.5)
 
     await ctx.send(f'Oi, {ctx.author.mention}!')
+
+async def on_member_join(member):
+    canal = bot.get_channel(1564739726643298497)
+    await canal.send(f"Bem-Vindo {member.mention}!")
 
 @bot.command()
 async def tchau(ctx):
@@ -146,6 +151,17 @@ async def python_ascii(ctx):
     await ctx.send(python_logo)
 
 @bot.command()
+async def fibonacci(ctx, n: int = 0):
+    numeros = []
+    async with ctx.channel.typing():
+        await asyncio.sleep(5)
+    a, b = 0, 1
+    while a <= n:
+        numeros.append(str(a))
+        a, b = b, a+b
+    await ctx.send(f'```{" - ".join(numeros)}```')
+
+@bot.command()
 async def ajuda(ctx):
     async with ctx.channel.typing():
         await asyncio.sleep(4)
@@ -162,6 +178,7 @@ async def ajuda(ctx):
     !dance: faz o PyBot dançar
     !rolar_dado: rola um dado comum
     !averiguar_resenha: \U00000022averiguando possível resenha...\U00000022
-    !python_ascii: manda uma arte em ascii com a logo do python""")
+    !python_ascii: manda uma arte em ascii com a logo do python
+    !fibonacci **n**: faz a sequencia de fibonacci (n é o numero, exemplo: \U00000022!fibonacci 8\U00000022)""")
 
-bot.run("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+bot.run("Wow, quase 200 linhas OoO")
