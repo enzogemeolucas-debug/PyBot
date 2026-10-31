@@ -1,4 +1,5 @@
 import discord, time, random, asyncio
+from math import *
 from discord.ext import commands
 
 intents = discord.Intents.all()
@@ -93,7 +94,7 @@ async def kaboom(ctx):
         await asyncio.sleep(0.5)
     for i in range(10, 0, -1):
         await ctx.send(f"**00:{i:02d}**\U0001F4A3")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(1)
     await ctx.send(f"KABOOM!\U0001F4A5")
 
 @bot.command()
@@ -162,6 +163,23 @@ async def fibonacci(ctx, n: int = 0):
     await ctx.send(f'```{" - ".join(numeros)}```')
 
 @bot.command()
+async def resolver(ctx, *, equacao: str):
+    equacao = equacao.replace("x", "*").replace("^", "**").replace('.', '').replace(',', '.')
+
+    async with ctx.channel.typing():
+        await asyncio.sleep(1)
+
+    try:
+        resultado = f'{eval(equacao):_}'
+        resultado = resultado.replace(".", ",").replace("_", ".")
+
+        await ctx.send(f"Resposta: {resultado}")
+
+    except Exception as e:
+        await ctx.send(f"Erro! {e}")
+
+
+@bot.command()
 async def ajuda(ctx):
     async with ctx.channel.typing():
         await asyncio.sleep(4)
@@ -179,6 +197,7 @@ async def ajuda(ctx):
     !rolar_dado: rola um dado comum
     !averiguar_resenha: \U00000022averiguando possível resenha...\U00000022
     !python_ascii: manda uma arte em ascii com a logo do python
-    !fibonacci **n**: faz a sequencia de fibonacci (n é o numero, exemplo: \U00000022!fibonacci 8\U00000022)""")
+    !fibonacci **n**: faz a sequencia de fibonacci (n é o numero, exemplo: \U00000022!fibonacci 8\U00000022)
+    !resolver **operação matematica**: faz uma operação matematica (+, -, *, /) exemplo: !resolver 3 + 2 -> **5**""")
 
-bot.run("Wow, quase 200 linhas OoO")
+bot.run("matematica B)")
