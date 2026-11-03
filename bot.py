@@ -1,6 +1,7 @@
-import discord, time, random, asyncio
+import discord, time, random, asyncio, os
 from math import *
 from discord.ext import commands
+
 
 intents = discord.Intents.all()
 
@@ -127,11 +128,7 @@ async def averiguar_resenha(ctx):
     async with ctx.channel.typing():
         await asyncio.sleep(0.7)
 
-    imagem = 'C:\\Users\\enzog\\Downloads\\resenha.png'
-    resenha_encontrada = 'C:\\Users\\enzog\\Downloads\\resenha_encontrada.png'
-
-    await ctx.send(file=discord.File(imagem))
-
+    await ctx.send("https://klipy.com/gifs/averiguar-resenha-averiguando")
     chance = random.random()
 
     await asyncio.sleep(10)
@@ -142,7 +139,7 @@ async def averiguar_resenha(ctx):
     else:
         await ctx.send("RESENHA ENCONTRADA\U0001F6A8\U0001F6A8\U0001F6A8\U0001F6A8\U0001F6A8\U0001F440\U0001F440\U0001F440\U0001F440")
         await asyncio.sleep(1)
-        await ctx.send(file=discord.File(resenha_encontrada))
+        await ctx.send("https://klipy.com/gifs/resenha-alerta")
 
 @bot.command()
 async def python_ascii(ctx):
@@ -164,20 +161,26 @@ async def fibonacci(ctx, n: int = 0):
 
 @bot.command()
 async def resolver(ctx, *, equacao: str):
-    equacao = equacao.replace("x", "*").replace("^", "**").replace('.', '').replace(',', '.')
+    equacao = equacao.replace("x", "*").replace("^", "**")
 
     async with ctx.channel.typing():
         await asyncio.sleep(1)
 
     try:
-        resultado = f'{eval(equacao):_}'
-        resultado = resultado.replace(".", ",").replace("_", ".")
+        resultado = f'{eval(equacao)}'
 
         await ctx.send(f"Resposta: {resultado}")
 
-    except Exception as e:
-        await ctx.send(f"Erro! {e}")
+    except Exception as erro:
+        await ctx.send(f"Erro! {erro}")
 
+@bot.command()
+async def meme(ctx):
+    memes = os.listdir("imagens")
+
+    pegar_meme = random.choice(memes)
+
+    await ctx.send(file=discord.File(f"imagens/{pegar_meme}"))
 
 @bot.command()
 async def ajuda(ctx):
@@ -198,6 +201,7 @@ async def ajuda(ctx):
     !averiguar_resenha: \U00000022averiguando possível resenha...\U00000022
     !python_ascii: manda uma arte em ascii com a logo do python
     !fibonacci **n**: faz a sequencia de fibonacci (n é o numero, exemplo: \U00000022!fibonacci 8\U00000022)
-    !resolver **operação matematica**: faz uma operação matematica (+, -, *, /) exemplo: !resolver 3 + 2 -> **5**""")
+    !resolver **operação matematica**: faz uma operação matematica (+, -, *, /) exemplo: !resolver 3 + 2 -> **5**
+    !meme: manda um meme aleatorio""")
 
-bot.run("matematica B)")
+bot.run("github é muito bom")
