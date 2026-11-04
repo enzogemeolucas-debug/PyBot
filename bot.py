@@ -1,4 +1,4 @@
-import discord, time, random, asyncio, os
+import discord, time, random, asyncio, os, requests
 from math import *
 from discord.ext import commands
 
@@ -183,6 +183,16 @@ async def meme(ctx):
     await ctx.send(file=discord.File(f"imagens/{pegar_meme}"))
 
 @bot.command()
+async def fato_gato(ctx):
+    async with ctx.channel.typing():
+        await asyncio.sleep(1)
+
+    response = requests.get("https://meowfacts.herokuapp.com/?lang=por-br")
+    data = response.json()
+    fact = data["data"][0]
+
+    await ctx.send(f"Fato aleatório sobre gatos: {fact}")
+@bot.command()
 async def ajuda(ctx):
     async with ctx.channel.typing():
         await asyncio.sleep(4)
@@ -202,6 +212,8 @@ async def ajuda(ctx):
     !python_ascii: manda uma arte em ascii com a logo do python
     !fibonacci **n**: faz a sequencia de fibonacci (n é o numero, exemplo: \U00000022!fibonacci 8\U00000022)
     !resolver **operação matematica**: faz uma operação matematica (+, -, *, /) exemplo: !resolver 3 + 2 -> **5**
-    !meme: manda um meme aleatorio""")
+    !meme: manda um meme aleatorio
+    !fato_gato: manda um fato aleatorio sobre gatos
+""")
 
-bot.run("github é muito bom")
+bot.run("token mais aura do mundo")
