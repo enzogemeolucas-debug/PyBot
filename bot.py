@@ -37,11 +37,34 @@ python_logo = """
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠡⠀⠌⠐⡀⡐⢈⠠⠁⠌⠠⢁⠐⡀⢂⠂⡀⠀⠀⡀⠂⠄⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠌⡀⠂⠄⠂⠄⠡⢈⠐⡀⢂⠂⢂⠐⠠⢁⠡⠠⠁⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠈⠀⠅⠨⠀⠂⠂⠂⠨⠠⠈⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"""
+
+fedora_logo = """
+```ansi
+[96m             .',;::::;,'.                 
+         .';:cccccccccccc:;,.         
+      .;cccccccccccccccccccccc;.          
+    .:cccccccccccccccccccccccccc:.        
+  .;ccccccccccccc;[97m.:dddl:.[96m;ccccccc;.      
+ .:ccccccccccccc;[97mOWMKOOXMWd[96m;ccccccc:.     
+.:ccccccccccccc;[97mKMMc;cc;xMMc[96m;ccccccc:.   
+,cccccccccccccc;[97mMMM.;cc;;WW:[96m;cccccccc,    
+:cccccccccccccc;[97mMMM.[96m;cccccccccccccccc:    
+:ccccccc;[97moxOOOo;MMM000k.[96m;cccccccccccc:    
+cccccc;[97m0MMKxdd:;MMMkddc.[96m;cccccccccccc;    
+ccccc;[97mXMO';cccc;MMM.[96m;cccccccccccccccc'    
+ccccc;[97mMMo;ccccc;MMW.[96m;ccccccccccccccc;     
+ccccc;[97m0MNc.ccc.xMMd[96m;ccccccccccccccc;      
+cccccc;[97mdNMWXXXWM0:[96m;cccccccccccccc:,       
+cccccccc;[97m.:odl:.[96m;cccccccccccccc:,.        
+ccccccccccccccccccccccccccccc:'.          
+:ccccccccccccccccccccccc:;,..             
+ ':cccccccccccccccc::;,.          
+[0m
+```"""
 @bot.event
 async def on_ready():
     print("Bot iniciado!")
     print("Intent members:", bot.intents.members)
-
 
 @bot.command()
 async def oi(ctx):
@@ -192,6 +215,14 @@ async def fato_gato(ctx):
     fact = data["data"][0]
 
     await ctx.send(f"Fato aleatório sobre gatos: {fact}")
+
+@bot.command()
+async def pyfetch(ctx):
+    async with ctx.channel.typing():
+        await asyncio.sleep(5)
+
+    await ctx.send(fedora_logo)
+
 @bot.command()
 async def ajuda(ctx):
     async with ctx.channel.typing():
@@ -214,6 +245,7 @@ async def ajuda(ctx):
     !resolver **operação matematica**: faz uma operação matematica (+, -, *, /) exemplo: !resolver 3 + 2 -> **5**
     !meme: manda um meme aleatorio
     !fato_gato: manda um fato aleatorio sobre gatos
+    !pyfetch: mostra a distro de linux que o pybot esta sendo atualizado pelo criador
 """)
 
-bot.run("token mais aura do mundo")
+bot.run("ola senhor penguim🐧🐍")
